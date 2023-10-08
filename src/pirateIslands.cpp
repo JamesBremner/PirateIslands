@@ -1,15 +1,15 @@
 #include "pirateIslands.h"
 
-    void cIslands::addAdjacentIslands(
-        const std::string &name1,
-        const std::string &name2,
-        int cost)
-    {
-        int ei = gd.g.add(name1, name2);
-        if (ei >= gd.edgeWeight.size())
-            gd.edgeWeight.resize(ei + 1);
-        gd.edgeWeight[ei] = cost;
-    }
+void cIslands::addAdjacentIslands(
+    const std::string &name1,
+    const std::string &name2,
+    int cost)
+{
+    int ei = gd.g.add(name1, name2);
+    if (ei >= gd.edgeWeight.size())
+        gd.edgeWeight.resize(ei + 1);
+    gd.edgeWeight[ei] = cost;
+}
 
 void cBoat::navigate()
 {
@@ -176,35 +176,36 @@ void cBoat::printSafePath() const
     }
 }
 
-void cInstance::generateExample1()
+void cInstance::readfile(const std::string &fname)
 {
-    std::cout << "\nExample1\n";
+    std::ifstream ifs(fname);
+    if (!ifs.is_open())
+        throw std::runtime_error("Cannot open file");
 
-    isles.addAdjacentIslands("isle1", "isle2", 6);
-    isles.addAdjacentIslands("isle2", "isle3", 1);
-    isles.addAdjacentIslands("isle2", "isle4", 2);
-    isles.addAdjacentIslands("isle3", "isle4", 3);
+    std::string stype, sn1, sn2, scost;
+    int ki;
+    ifs >> stype;
 
-    pirates.add(isles.find("isle3"), 6);
-    pirates.add(isles.find("isle3"), 7);
-    pirates.add(isles.find("isle3"), 8);
-
-    boat.set("isle1", "isle3");
-}
-void cInstance::generateExample2()
-{
-    std::cout << "\nExample2\n";
-
-    isles.addAdjacentIslands("isle1", "isle2", 6);
-    isles.addAdjacentIslands("isle1", "isle3", 1);
-    isles.addAdjacentIslands("isle2", "isle4", 2);
-    isles.addAdjacentIslands("isle3", "isle4", 3);
-
-    pirates.add(isles.find("isle3"), 1);
-    pirates.add(isles.find("isle3"), 2);
-    pirates.add(isles.find("isle3"), 3);
-    pirates.add(isles.find("isle3"), 4);
-    pirates.add(isles.find("isle3"), 5);
-
-    boat.set("isle1", "isle4");
+    while (ifs.good())
+    {
+        switch (stype[0])
+        {
+        case 'l':
+            ifs >> sn1 >> sn2 >> scost;
+            isles.addAdjacentIslands(sn1, sn2, atoi(scost.c_str()));
+            break;
+        case 'p':
+            ifs >> sn1 >> scost;
+            ki = isles.find(sn1);
+            if (ki < 0)
+                throw std::runtime_error("Pirate cannot find " + sn1);
+            pirates.add(ki, atoi(scost.c_str()));
+            break;
+        case 'r':
+            ifs >> sn1 >> sn2;
+            boat.set(sn1,sn2);
+            break;
+        }
+        ifs >> stype;
+    }
 }

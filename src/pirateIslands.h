@@ -178,6 +178,5 @@ public:
         boat.set(isles);
         boat.set(pirates);
     }
-    void generateExample1();
-    void generateExample2();
+    void readfile( const std::string& fname );
 };

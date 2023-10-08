@@ -9,7 +9,7 @@ main()
 
     cInstance thePirateIslands1;
 
-    thePirateIslands1.generateExample1();
+    thePirateIslands1.readfile("../dat/ex1.txt");
 
     thePirateIslands1.boat.navigate();
 
@@ -20,7 +20,7 @@ main()
 
     cInstance thePirateIslands2;
 
-    thePirateIslands2.generateExample2();
+    thePirateIslands2.readfile("../dat/ex2.txt");
 
     thePirateIslands2.boat.navigate();
 

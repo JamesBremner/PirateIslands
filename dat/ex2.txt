@@ -1,0 +1,10 @@
+l isle1 isle2 6
+l isle1 isle3 1
+l isle2 isle4 2
+l isle3 isle4 3
+p isle3 1
+p isle3 2
+p isle3 3
+p isle3 4
+p isle3 5
+r isle1 isle4
