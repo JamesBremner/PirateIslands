@@ -185,7 +185,7 @@ int cBoat::getLength() const
 
 void cBoat::printSafePath() const
 {
-    std::cout << "\n=========Best Safe Path =========================\n";
+   
     int time = 0;
     for (auto &la : myTimeline)
     {
@@ -210,6 +210,13 @@ void cBoat::printSafePath() const
         }
     }
 
+
+}
+
+void cInstance::printResult()
+{
+    std::cout << "\n========= " << myfname<< " Safe Path =========================\n";
+    boat.printSafePath();
     std::cout << "==================================\n\n";
 }
 
@@ -218,6 +225,7 @@ void cInstance::readfile(const std::string &fname)
     std::ifstream ifs(fname);
     if (!ifs.is_open())
         throw std::runtime_error("Cannot open file");
+    myfname = fname;
 
     std::string stype, sn1, sn2, scost;
     int ki;

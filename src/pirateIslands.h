@@ -169,7 +169,7 @@ private:
     /// @brief add busy timeslot
     /// @param isle 
     /// @param A // activity
-    
+
     void timestep(int isle, eActivity A);
 };
 
@@ -182,6 +182,7 @@ public:
     cIslands isles;
     cPirates pirates;
     cBoat boat;
+    std::string myfname;
 
     cInstance()
     {
@@ -189,4 +190,5 @@ public:
         boat.set(pirates);
     }
     void readfile( const std::string& fname );
+    void printResult();
 };
