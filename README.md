@@ -2,6 +2,9 @@
 
 Some islands, some pirates infesting the islands, a boat trying to safely navigate between the islands.
 
+![F71xM_Ja8AA0rJZ](https://github.com/JamesBremner/PirateIslands/assets/2046227/283c1a0f-9194-4541-8c85-a8f66dc9d3ef)
+'Island Hopping' Monica Morrill  https://twitter.com/MMorrillArt
+
 [Input file format](https://github.com/JamesBremner/PirateIslands/wiki/Input-format)
 
 Input Example
