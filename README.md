@@ -2,7 +2,9 @@
 
 Some islands, some pirates infesting the islands, a boat trying to safely navigate between the islands.
 
-Input
+[Input file format](https://github.com/JamesBremner/PirateIslands/wiki/Input-format)
+
+Input Example
 
 <pre>
 l isle1 isle2 6
