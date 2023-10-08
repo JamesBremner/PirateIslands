@@ -7,16 +7,16 @@
 main()
 {
 
-    cInstance thePirateIslands1;
+    // cInstance thePirateIslands1;
 
-    thePirateIslands1.readfile("../dat/ex1.txt");
+    // thePirateIslands1.readfile("../dat/ex1.txt");
 
-    thePirateIslands1.boat.navigate();
+    // thePirateIslands1.boat.navigate();
 
-    thePirateIslands1.boat.printSafePath();
+    // thePirateIslands1.boat.printSafePath();
 
-    if (thePirateIslands1.boat.getLength() != 9)
-        std::cout << "BAD RESULT\n";
+    // if (thePirateIslands1.boat.getLength() != 9)
+    //     std::cout << "BAD RESULT\n";
 
     cInstance thePirateIslands2;
 

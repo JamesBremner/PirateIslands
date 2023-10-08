@@ -7,4 +7,6 @@ p isle3 2
 p isle3 3
 p isle3 4
 p isle3 5
-r isle1 isle4
+p isle3 6
+p isle3 7
+r isle1 isle4 100

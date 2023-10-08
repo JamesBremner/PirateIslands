@@ -5,4 +5,4 @@ l isle3 isle4 3
 p isle3 6
 p isle3 7
 p isle3 8
-r isle1 isle3
+r isle1 isle3 6
