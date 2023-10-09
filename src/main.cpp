@@ -11,7 +11,7 @@ main()
 
     thePirateIslands1.readfile("../dat/ex1.txt");
 
-    thePirateIslands1.boat.navigate();
+    thePirateIslands1.navigate();
 
     thePirateIslands1.printResult();
 
@@ -22,7 +22,7 @@ main()
 
     thePirateIslands2.readfile("../dat/ex2.txt");
 
-    thePirateIslands2.boat.navigate();
+    thePirateIslands2.navigate();
 
     thePirateIslands2.printResult();
 

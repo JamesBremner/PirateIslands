@@ -11,10 +11,9 @@ typedef raven::graph::path_cost_t path_t;
 class cIslands
 {
 public:
-
     /// @brief Add two adjacent islands
-    /// @param name1    
-    /// @param name2 
+    /// @param name1
+    /// @param name2
     /// @param cost     // time taken to sail between islands
 
     void addAdjacentIslands(
@@ -78,7 +77,6 @@ private:
     std::vector<std::pair<int, int>> vLocation; // pirate locations and times
 };
 
-
 class cBoat
 {
 public:
@@ -90,12 +88,12 @@ public:
     /// @brief set route
     /// @param dep departure island
     /// @param dst destination island
-    /// @param fuel 
+    /// @param fuel
 
     void set(
         const std::string &dep,
         const std::string &dst,
-        int fuel )
+        int fuel)
     {
         startName = dep;
         endName = dst;
@@ -131,48 +129,57 @@ private:
 
     path_t myPath;
 
+    bool fPirateDelay;
+
     /// @brief activity occupying previous time slot
     enum class eActivity
     {
         start,
         sail,
         dodge,
-        refuel
+        refuel,
+        end,
     };
 
-    /// @brief timeline of activities 
-    std::vector<std::pair<int,eActivity>> myTimeline;
+    /// @brief timeline of activities
+    std::vector<std::pair<int, eActivity>> myTimeline;
 
     int myFuel;
 
-    /// @brief Adjust path to avoid pirates
-    /// @return true if dodging pirates was needed
-    ///
-    /// mySafePath attribute is input and modified
-    /// to remain on an island if the next island would have pirates when we arrived there
 
-    bool dodgePirates();
+    /** @brief Follow a path through islands, refuelling and dodging pirates as needed
+     *
+     * Graph theory has given a path through the islands
+     * assuming that there are no delays
+     * 
+     * This generates a realistic timeline, 
+     * including delays as required for refuleling and dodging pirates 
+     */
 
-    /// @brief wait for pirates, if encountered on island
-    /// @param[in/out] safePath
-    /// @param prev
-    /// @param isle // to check
-    /// @param time // we would arrive with no pirates
+    void reality(); 
+
+    /// @brief wait for pirates, if they would be encountered on next island
+    /// @param isle // next island
     /// @return delay
 
-    int waitForPirates(
-        int prev,
-        int isle,
-        int deptime,
-        int arrtime);
+    void waitForPirates(int isle);
+
+    /// @brief refuel if neccessary to reach the next island
+    /// @param isle // next island
+
+    void refuel(int isle);
+
+    /// @brief sail to the next island
+    /// @param isle 
+
+    void sail(int isle);
 
     /// @brief add busy timeslot
-    /// @param isle 
+    /// @param isle
     /// @param A // activity
 
     void timestep(int isle, eActivity A);
 };
-
 
 /// @brief Some islands, some pirates infesting the islands, a boat trying to safely navigate between the islands
 
@@ -189,6 +196,7 @@ public:
         boat.set(isles);
         boat.set(pirates);
     }
-    void readfile( const std::string& fname );
+    void readfile(const std::string &fname);
+    void navigate();
     void printResult();
 };

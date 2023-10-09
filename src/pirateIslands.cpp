@@ -23,7 +23,9 @@ void cBoat::navigate()
     myPath = path(gd);
 
     // dodge pirates
-    if (!dodgePirates())
+    reality();
+
+    if (! fPirateDelay )
         return;
 
     // there was a pirate delay,
@@ -43,7 +45,7 @@ void cBoat::navigate()
 
         // dodge pirates
         myPath = pathtest;
-        bool fPirateDelay = dodgePirates();
+        reality();
 
         // check for better path
         if (myTimeline.size() < bestTimeline.size())
@@ -63,10 +65,9 @@ void cBoat::navigate()
     myTimeline = bestTimeline;
 }
 
-bool cBoat::dodgePirates()
+void cBoat::reality()
 {
-    bool fPirateDelay = false;
-    int time = 0;
+    fPirateDelay = false;
 
     /* There may be delays, due to refueling or waiting for pirates,
      *  myPath, the optimum path from Dijsktra or Yen,
@@ -74,78 +75,73 @@ bool cBoat::dodgePirates()
      */
     myTimeline.clear();
 
-    // loop over path
-    auto prev = myPath.first.end();
-    for (
-        auto it = myPath.first.begin();
-        it != myPath.first.end();
-        it++)
+    for( int nextIsland : myPath.first)
     {
-        if (prev == myPath.first.end())
+        if (nextIsland == myPath.first[0])
         {
             // at start island
-            timestep(0, eActivity::start);
-            prev = it;
+            timestep(
+                nextIsland,
+                eActivity::start);
             continue;
         }
 
-        // calculate the time to next island
-        int isle = *it;
-        int stime = pIsles->sailtime(*prev, isle);
-
         // check fuel
-        while (myFuel < stime)
-        {
-            std::cout << "Refueling on " << pIsles->name(*prev) << " ";
-            timestep(*prev, eActivity::refuel);
-            time++;
-            myFuel++;
-        }
+        refuel(nextIsland);
 
         // wait until island is free of pirates
-        int delay = waitForPirates(
-            *prev,
-            isle,
-            time,
-            time + stime);
-        if (!fPirateDelay)
-            fPirateDelay = (delay > 0);
+        waitForPirates(nextIsland);
 
-        // safe to move on
-        for (int s = 0; s < stime; s++)
-            timestep(isle, eActivity::sail);
-        time += delay + stime;
-
-        prev = it;
+        // able and safe to move on
+        sail(nextIsland);
     }
-    // myPath = delayPath;
-    return fPirateDelay;
+    timestep(
+        pIsles->find(endName),
+        eActivity::end );
 }
 
-int cBoat::waitForPirates(
-    int prev,
-    int isle,
-    int deptime,
-    int arrtime)
+void cBoat::refuel(int isle)
 {
-    int delay = 0;
-    while (pPirates->isCollision(isle, arrtime))
+    int stime = pIsles->sailtime(myTimeline.back().first, isle);
+    while (myFuel < stime)
     {
-        // pirates waiting, stay where we are
-        std::cout << "Pirates on " << pIsles->name(isle) << " staying on ";
-        myTimeline.push_back(std::make_pair(prev, eActivity::dodge));
-        deptime++;
-        arrtime++;
-        delay++;
+        timestep(myTimeline.back().first, eActivity::refuel);
         myFuel++;
     }
-    return delay;
+}
+
+void cBoat::waitForPirates(int isle)
+{
+    int prev = myTimeline.back().first;
+    int atime = myTimeline.size() + pIsles->sailtime(prev, isle);
+    while (pPirates->isCollision(isle, atime))
+    {
+        // pirates waiting, stay where we are
+        timestep(prev, eActivity::dodge);
+        atime++;
+        myFuel++;
+        fPirateDelay = true;
+    }
+}
+
+void cBoat::sail(int isle)
+{
+     int stime = pIsles->sailtime(myTimeline.back().first, isle);
+    for (
+        int s = 0;
+        s < stime;
+        s++)
+    {
+        timestep(isle, eActivity::sail);
+        myFuel--;
+    }
 }
 
 void cBoat::timestep(int isle, eActivity A)
 {
     myTimeline.emplace_back(isle, A);
-    std::cout << "time " << myTimeline.size()
+
+    std::cout << "| time " << myTimeline.size()-1
               << " ";
     switch (A)
     {
@@ -164,28 +160,22 @@ void cBoat::timestep(int isle, eActivity A)
     case eActivity::sail:
         std::cout << "sailing to ";
         break;
+
+    case eActivity::end:
+        std::cout << "destination ";
+        break;
     }
     std::cout << pIsles->name(isle) << " ";
 }
 
-// void cBoat::arrive(
-//     path_t &safePath,
-//     int isle,
-//     int time)
-// {
-//     std::cout <<"\n"<< pIsles->name(isle) << " at time " << time << "\n";
-//     safePath.first.push_back(isle);
-//     myFuel--;
-// }
-
 int cBoat::getLength() const
 {
-    return myTimeline.size() - 1;
+    return myTimeline.size() - 2;
 }
 
 void cBoat::printSafePath() const
 {
-   
+
     int time = 0;
     for (auto &la : myTimeline)
     {
@@ -207,15 +197,22 @@ void cBoat::printSafePath() const
         case eActivity::sail:
             std::cout << "sailing to " << pIsles->name(la.first) << "\n";
             break;
+
+        case eActivity::end:
+            std::cout << "at destination " << pIsles->name(la.first) << "\n";
+            break;
         }
     }
+}
 
-
+void cInstance::navigate()
+{
+    boat.navigate();
 }
 
 void cInstance::printResult()
 {
-    std::cout << "\n========= " << myfname<< " Safe Path =========================\n";
+    std::cout << "\n========= " << myfname << " Safe Path =========================\n";
     boat.printSafePath();
     std::cout << "==================================\n\n";
 }

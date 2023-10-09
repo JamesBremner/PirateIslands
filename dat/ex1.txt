@@ -2,7 +2,7 @@ l isle1 isle2 6
 l isle2 isle3 1
 l isle2 isle4 2
 l isle3 isle4 3
-p isle3 6
 p isle3 7
 p isle3 8
+p isle3 9
 r isle1 isle3 6
