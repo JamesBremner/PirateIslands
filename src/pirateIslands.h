@@ -11,6 +11,12 @@ typedef raven::graph::path_cost_t path_t;
 class cIslands
 {
 public:
+    void clear()
+    {
+        gd.g.clear();
+        gd.edgeWeight.clear();
+    }
+
     /// @brief Add two adjacent islands
     /// @param name1
     /// @param name2
@@ -53,6 +59,10 @@ private:
 class cPirates
 {
 public:
+    void clear()
+    {
+        vLocation.clear();
+    }
     void add(
         int isle,
         int time)
@@ -83,6 +93,11 @@ public:
     cBoat()
         : pIsles(0)
     {
+    }
+
+    void clear()
+    {
+
     }
 
     /// @brief set route
@@ -118,7 +133,7 @@ public:
 
     /// @brief output details of the safe path
 
-    void printSafePath() const;
+    std::string realPathText() const;
 
 private:
     std::string startName;
@@ -196,7 +211,9 @@ public:
         boat.set(isles);
         boat.set(pirates);
     }
+    void clear();
     void readfile(const std::string &fname);
     void navigate();
     void printResult();
+    std::string textResults();
 };

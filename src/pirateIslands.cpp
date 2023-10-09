@@ -173,36 +173,38 @@ int cBoat::getLength() const
     return myTimeline.size() - 2;
 }
 
-void cBoat::printSafePath() const
+std::string cBoat::realPathText() const
 {
-
+    std::stringstream ss;
     int time = 0;
     for (auto &la : myTimeline)
     {
-        std::cout << " time " << time++ << ": ";
+        ss << " time " << time++ << ": ";
+
         switch (la.second)
         {
         case eActivity::start:
-            std::cout << "starting at " << pIsles->name(la.first) << "\n";
+            ss << "starting at " << pIsles->name(la.first) << "\n";
             break;
 
         case eActivity::refuel:
-            std::cout << "refueling at " << pIsles->name(la.first) << "\n";
+            ss << "refueling at " << pIsles->name(la.first) << "\n";
             break;
 
         case eActivity::dodge:
-            std::cout << "dodging pirates at " << pIsles->name(la.first) << "\n";
+            ss << "dodging pirates at " << pIsles->name(la.first) << "\n";
             break;
 
         case eActivity::sail:
-            std::cout << "sailing to " << pIsles->name(la.first) << "\n";
+            ss << "sailing to " << pIsles->name(la.first) << "\n";
             break;
 
         case eActivity::end:
-            std::cout << "at destination " << pIsles->name(la.first) << "\n";
+            ss << "at destination " << pIsles->name(la.first) << "\n";
             break;
         }
     }
+    return ss.str();
 }
 
 void cInstance::navigate()
@@ -210,15 +212,31 @@ void cInstance::navigate()
     boat.navigate();
 }
 
+std::string cInstance::textResults()
+{
+    return boat.realPathText();
+}
+
 void cInstance::printResult()
 {
     std::cout << "\n========= " << myfname << " Safe Path =========================\n";
-    boat.printSafePath();
+    boat.realPathText();
     std::cout << "==================================\n\n";
 }
 
+void cInstance::clear()
+{
+    isles.clear();
+    pirates.clear();
+    boat.clear();
+    myfname.clear();
+}
+
+
 void cInstance::readfile(const std::string &fname)
 {
+    clear();
+
     std::ifstream ifs(fname);
     if (!ifs.is_open())
         throw std::runtime_error("Cannot open file");

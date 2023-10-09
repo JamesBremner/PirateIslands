@@ -32,7 +32,7 @@ OBJ_starter = \
 
 ### COMPILE
 
-$(ODIR)/%.o: %.cpp pirateIslands.h
+$(ODIR)/%.o: %.cpp pirateIslands.h cGUI.h
 	g++  $(CCflags) \
 	-c -o $@ $< $(INCS)
 
